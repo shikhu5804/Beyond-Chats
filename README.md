@@ -19,7 +19,7 @@ This project is a clone of Intercom's AI-enhanced admin panel UI, built as part 
 
 ## Tech Stack
 - **Framework**: ReactJS
-- **UI Components**: Custom built with CSS
+- **UI Components**: ShadCN
 - **State Management**: React Context/Hooks
 - **Build Tool**: Vite (or Create-React-App if used)
 
