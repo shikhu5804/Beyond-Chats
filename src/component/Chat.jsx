@@ -29,8 +29,8 @@ export default function Chat({ chat, onSend, input, setInput }) {
 
   if (!chat) {
     return (
-      <div className="w-3/4 h-full bg-gray-50 flex items-center justify-center">
-        <div className="text-center space-y-2">
+      <div className="w-full md:w-3/4 h-full bg-gray-50 flex items-center justify-center">
+        <div className="text-center space-y-2 px-4">
           <h2 className="text-2xl font-bold text-gray-700">
             Welcome to your inbox
           </h2>
@@ -43,10 +43,10 @@ export default function Chat({ chat, onSend, input, setInput }) {
   }
 
   return (
-    <div className="w-3/4 flex flex-col h-full bg-gray-50">
+    <div className="w-full md:w-3/4 flex flex-col h-full bg-gray-50">
       <div className="p-4 border-b font-semibold text-lg">{chat.name}</div>
 
-      <div className="flex-1 p-6 space-y-6 overflow-y-auto text-sm">
+      <div className="flex-1 px-4 py-6 space-y-6 overflow-y-auto text-sm">
         <AnimatePresence initial={false}>
           {chat.messages.map((msg, idx) => {
             const isUser = msg.from === "user";
@@ -107,7 +107,7 @@ export default function Chat({ chat, onSend, input, setInput }) {
       </div>
 
       {/* Input Box */}
-      <div className="bg-white rounded-xl shadow-md p-4 w-full max-w-2xl mx-auto">
+      <div className="bg-white rounded-xl shadow-md p-4 w-full max-w-full md:max-w-2xl mx-auto">
         <div className="flex items-center justify-between mb-2">
           <div className="font-medium text-sm flex items-center gap-1">
             <MdChat className=" w-4 h-4 text-black" />
@@ -128,9 +128,8 @@ export default function Chat({ chat, onSend, input, setInput }) {
           </div>
         </div>
 
-        <div className="p-3 border-t">
+        <div className="pt-3 border-t">
           {/* Input Bar with Send Button */}
-
           <TextareaAutosize
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -147,7 +146,7 @@ export default function Chat({ chat, onSend, input, setInput }) {
           />
 
           {/* Icons */}
-          <div className="flex items-center gap-4 text-black text-[20px] mt-3">
+          <div className="flex items-center gap-4 text-black text-[20px] mt-3 flex-wrap">
             {/* Icons group */}
             <div className="flex items-center gap-4">
               {/* Solid black lightning */}

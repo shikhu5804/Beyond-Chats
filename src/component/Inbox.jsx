@@ -49,8 +49,8 @@ export default function Inbox({ activeId, onSelect }) {
     },
   ];
 
-return (
-    <div className="w-1/4 h-full bg-white border-r text-sm flex flex-col">
+  return (
+    <div className="w-full sm:w-1/4 h-full bg-white border-r text-sm flex flex-col">
       <div className="p-4 font-medium flex justify-between items-center border-b">
         <span>Your inbox</span>
         <div className="flex items-center gap-2 text-gray-600 text-sm">
@@ -61,7 +61,7 @@ return (
         </div>
       </div>
 
-      <div className="overflow-y-auto">
+      <div className="overflow-y-auto flex-1">
         {chats.map((chat) => (
           <div
             key={chat.id}
@@ -70,13 +70,23 @@ return (
             }`}
             onClick={() => onSelect(chat.id)}
           >
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold ${chat.iconBg}`}>
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-semibold ${chat.iconBg}`}
+            >
               {chat.iconText ? chat.iconText : chat.icon}
             </div>
             <div className="flex-1">
-              <div className="text-sm font-medium text-gray-800">{chat.name}</div>
-              <div className="text-gray-500 text-xs truncate">{chat.message}</div>
-              {chat.sub && <div className="text-gray-400 text-xs truncate">{chat.sub}</div>}
+              <div className="text-sm font-medium text-gray-800">
+                {chat.name}
+              </div>
+              <div className="text-gray-500 text-xs truncate">
+                {chat.message}
+              </div>
+              {chat.sub && (
+                <div className="text-gray-400 text-xs truncate">
+                  {chat.sub}
+                </div>
+              )}
             </div>
             <div className="text-xs text-gray-500 whitespace-nowrap mt-1 flex items-center gap-1">
               {chat.showClock ? (

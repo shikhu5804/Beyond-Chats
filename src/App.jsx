@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Inbox from "./component/Inbox";
 import Chat from "./component/Chat";
 import AICopilot from "./component/AICopilot";
 import { FaArrowLeft, FaTicketAlt } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
-
 
 const dummyChats = {
   1: {
@@ -29,7 +28,7 @@ const dummyChats = {
     messages: [
       {
         from: "user",
-        text: "Hi there, I have a question about my order placed last Friday. I received the confirmation email but haven't gotten any further updates about the shipment or estimated delivery date.",
+        text: "Hi there, I have a question about my order placed last Friday...",
       },
       {
         from: "agent",
@@ -44,7 +43,7 @@ const dummyChats = {
     messages: [
       {
         from: "user",
-        text: "Good morning, let me explain the problem I've been facing. The checkout page seems to crash every time I try to place an order, and it's becoming quite frustrating.",
+        text: "Good morning, let me explain the problem I've been facing...",
       },
       {
         from: "agent",
@@ -54,31 +53,31 @@ const dummyChats = {
   },
   4: {
     name: "Luis - Small Crafts",
-    iconText: <FaTicketAlt/>,
+    iconText: <FaTicketAlt />,
     iconBg: "bg-indigo-700",
     messages: [
       {
         from: "user",
-        text: "I wanted to report a critical bug related to the Booking API. It seems to throw a 500 server error when we try to book more than three items in one request.",
+        text: "I wanted to report a critical bug related to the Booking API...",
       },
       {
         from: "agent",
-        text: "Thank you for reporting this. We're currently investigating the issue and will keep you posted on the fix.",
+        text: "Thank you for reporting this. We're currently investigating the issue.",
       },
     ],
   },
   5: {
     name: "Miracle - Exemplary Bank",
-    iconText: <FaArrowLeft className="text-gray-700"/>,
+    iconText: <FaArrowLeft className="text-gray-700" />,
     iconBg: "bg-gray-300",
     messages: [
       {
         from: "user",
-        text: "Hey there, I’m here to resolve the issue I raised earlier regarding the failed transaction. The amount was debited from my account, but I haven’t received a confirmation or refund.",
+        text: "Hey there, I’m here to resolve the issue I raised earlier...",
       },
       {
         from: "agent",
-        text: "Thank you for contacting us, Miracle. I understand how concerning that can be. Let me check the transaction logs.",
+        text: "Thank you for contacting us, Miracle. Let me check the transaction logs.",
       },
     ],
   },
@@ -88,6 +87,18 @@ export default function App() {
   const [activeChatId, setActiveChatId] = useState(null);
   const [chats, setChats] = useState(dummyChats);
   const [inputText, setInputText] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   const handleSendMessage = (text) => {
     if (!text || !activeChatId) return;
@@ -105,16 +116,48 @@ export default function App() {
     setInputText("");
   };
 
+  const handleBackToInbox = () => setActiveChatId(null);
+
   return (
-    <div className="flex h-screen">
-      <Inbox activeId={activeChatId} onSelect={setActiveChatId} />
-     <Chat
-  chat={chats[activeChatId]}
-  onSend={handleSendMessage}
-  input={inputText}
-  setInput={setInputText}
-/>
-<AICopilot setInput={setInputText} />  
+    <div className="flex h-screen w-full">
+      {/* Desktop View */}
+      {!isMobile && (
+        <>
+          <Inbox activeId={activeChatId} onSelect={setActiveChatId} />
+          <Chat
+            chat={chats[activeChatId]}
+            onSend={handleSendMessage}
+            input={inputText}
+            setInput={setInputText}
+          />
+          <AICopilot setInput={setInputText} />
+        </>
+      )}
+
+      {/* Mobile View */}
+      {isMobile && (
+        <>
+          {!activeChatId ? (
+            <Inbox activeId={activeChatId} onSelect={setActiveChatId} />
+          ) : (
+            <div className="flex flex-col w-full">
+              <div className="p-2 bg-white border-b flex items-center">
+                <button onClick={handleBackToInbox} className="mr-2 text-blue-600">
+                  <FaArrowLeft />
+                </button>
+                <span className="text-sm font-medium">Back to Inbox</span>
+              </div>
+              <Chat
+                chat={chats[activeChatId]}
+                onSend={handleSendMessage}
+                input={inputText}
+                setInput={setInputText}
+              />
+              <AICopilot setInput={setInputText} />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
