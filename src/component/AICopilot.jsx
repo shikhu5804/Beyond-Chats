@@ -109,7 +109,7 @@ Once I verify these details, I’ll send you a return QR code. Just post the ite
       <div className="flex-1 overflow-y-auto px-4 py-4 relative">
         {!started && (
           <>
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-center gap-2">
+            <div className="absolute hidden md:block inset-0 flex flex-col items-center justify-center text-center gap-2">
               <IntercomIcon size={32} />
               <p className="text-md font-semibold">Hi, I’m Fin AI Copilot</p>
               <p className="text-sm text-gray-500">
