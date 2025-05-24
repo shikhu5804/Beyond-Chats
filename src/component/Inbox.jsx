@@ -62,7 +62,8 @@ export default function Inbox({ activeId, onSelect }) {
       </div>
 
       {/* Chat list */}
-      <div className="overflow-y-auto flex-1">
+      <div className="overflow-y-auto flex-1 max-h-[calc(100vh-120px)]">
+        {" "}
         {chats.map((chat) => (
           <div
             key={chat.id}
@@ -84,9 +85,7 @@ export default function Inbox({ activeId, onSelect }) {
                 {chat.message}
               </div>
               {chat.sub && (
-                <div className="text-gray-400 text-xs truncate">
-                  {chat.sub}
-                </div>
+                <div className="text-gray-400 text-xs truncate">{chat.sub}</div>
               )}
             </div>
             <div className="text-xs text-gray-500 whitespace-nowrap mt-1 flex items-center gap-1">
@@ -105,12 +104,12 @@ export default function Inbox({ activeId, onSelect }) {
 
       {/* Footer */}
       <div className="block md:hidden p-4 border-t text-xs text-gray-500 flex items-center gap-2">
-          <p className="text-[10px] leading-tight">
-            This site is protected by reCAPTCHA and the{" "}
-            <span className="underline">Google Privacy Policy</span> and{" "}
-            <span className="underline">Terms of Service apply</span>.
-          </p>
-        </div>
+        <p className="text-[10px] leading-tight">
+          This site is protected by reCAPTCHA and the{" "}
+          <span className="underline">Google Privacy Policy</span> and{" "}
+          <span className="underline">Terms of Service apply</span>.
+        </p>
+      </div>
     </div>
   );
 }
