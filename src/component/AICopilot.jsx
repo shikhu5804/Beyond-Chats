@@ -29,8 +29,9 @@ export default function AICopilot() {
   const [sourceStatus, setSourceStatus] = useState(""); // new
   const [visibleBullets, setVisibleBullets] = useState(0); // for staggered bullet points
 
-  const fullAnswer =
-    "We understand that sometimes a purchase may not meet your expectations, and you may need to request a refund. To assist you with your refund request, could you please provide your order ID and proof of purchase. Please note: We can only refund orders placed within the last 60 days, and your item must meet our requirements for condition to be returned. Please check when you placed your order before proceeding. Once I've checked these details, if everything looks OK, I will send a returns QR code which you can use to post the item back. Your refund will be automatically issued once you put it in the post.";
+  const fullAnswer = `To help you with your refund request, I’ll need your order ID and proof of purchase. Refunds are only available for items bought within the last 60 days and must meet our return condition policy.
+
+Once I verify these details, I’ll send you a return QR code. Just post the item back using that, and your refund will be issued automatically.`;
 
   useEffect(() => {
     if (started) {
@@ -93,7 +94,7 @@ export default function AICopilot() {
   };
 
   return (
-    <div className="w-1/4 min-w-[300px] h-full flex flex-col border-l bg-gradient-to-t from-[#fdf4f5] via-[#f8f9fb] to-white text-sm font-sans relative">
+    <div className="w-1/4 min-w-[400px] h-full flex flex-col border-l bg-gradient-to-t from-[#fdf4f5] via-[#f8f9fb] to-white text-sm font-sans relative">
       {/* Tabs */}
       <div className="flex items-center justify-between border-b px-4 pt-4">
         <div className="flex gap-4">
@@ -190,6 +191,11 @@ export default function AICopilot() {
                         {finalVisible && (
                           <p className="text-sm font-regular text-gray-800">
                             {finalText}
+                            {finalText === fullAnswer && (
+                              <span className="ml-1 w-4 h-4 inline-flex items-center justify-center text-white text-xs bg-blue-900 rounded-full">
+                                1
+                              </span>
+                            )}
                           </p>
                         )}
                       </motion.div>
