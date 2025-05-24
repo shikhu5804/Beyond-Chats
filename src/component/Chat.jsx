@@ -1,4 +1,3 @@
-// src/component/Chat.jsx
 import { useState, useEffect, useRef } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 

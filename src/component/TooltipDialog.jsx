@@ -1,4 +1,3 @@
-// src/components/TooltipDialog.jsx
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 

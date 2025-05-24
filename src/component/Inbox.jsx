@@ -1,4 +1,3 @@
-// src/components/Inbox.jsx
 import { FiChevronDown, FiClock } from "react-icons/fi";
 import { FaArrowLeft, FaTicketAlt } from "react-icons/fa";
 
@@ -19,7 +18,7 @@ export default function Inbox({ activeId, onSelect }) {
       message: "Hi there, I have a qu...",
       time: "3min",
       iconText: "I",
-      iconBg: "bg-red-700", // dark red
+      iconBg: "bg-red-700",
       showClock: true,
     },
     {
@@ -51,8 +50,9 @@ export default function Inbox({ activeId, onSelect }) {
 
   return (
     <div className="w-full sm:w-1/4 h-full bg-white border-r text-sm flex flex-col">
+      {/* Header */}
       <div className="p-4 font-medium flex justify-between items-center border-b">
-        <span>Your inbox</span>
+        <span className="text-lg font-bold">Your inbox</span>
         <div className="flex items-center gap-2 text-gray-600 text-sm">
           <span>5 Open</span>
           <span className="flex items-center text-gray-500">
@@ -61,6 +61,7 @@ export default function Inbox({ activeId, onSelect }) {
         </div>
       </div>
 
+      {/* Chat list */}
       <div className="overflow-y-auto flex-1">
         {chats.map((chat) => (
           <div
@@ -101,6 +102,15 @@ export default function Inbox({ activeId, onSelect }) {
           </div>
         ))}
       </div>
+
+      {/* Footer */}
+      <div className="block md:hidden p-4 border-t text-xs text-gray-500 flex items-center gap-2">
+          <p className="text-[10px] leading-tight">
+            This site is protected by reCAPTCHA and the{" "}
+            <span className="underline">Google Privacy Policy</span> and{" "}
+            <span className="underline">Terms of Service apply</span>.
+          </p>
+        </div>
     </div>
   );
 }

@@ -140,20 +140,24 @@ export default function App() {
           {!activeChatId ? (
             <Inbox activeId={activeChatId} onSelect={setActiveChatId} />
           ) : (
-            <div className="flex flex-col w-full">
+            <div className="flex flex-col w-full h-full">
               <div className="p-2 bg-white border-b flex items-center">
                 <button onClick={handleBackToInbox} className="mr-2 text-blue-600">
                   <FaArrowLeft />
                 </button>
                 <span className="text-sm font-medium">Back to Inbox</span>
               </div>
-              <Chat
-                chat={chats[activeChatId]}
-                onSend={handleSendMessage}
-                input={inputText}
-                setInput={setInputText}
-              />
-              <AICopilot setInput={setInputText} />
+              <div className="flex-1 overflow-hidden">
+                <Chat
+                  chat={chats[activeChatId]}
+                  onSend={handleSendMessage}
+                  input={inputText}
+                  setInput={setInputText}
+                />
+              </div>
+              <div className="h-[30vh]">
+                <AICopilot setInput={setInputText} />
+              </div>
             </div>
           )}
         </>

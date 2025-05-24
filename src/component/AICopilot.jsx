@@ -1,4 +1,3 @@
-// src/components/AICopilot.jsx
 import { useEffect, useState, useRef } from "react";
 import { FiSend, FiBookOpen, FiMessageSquare, FiEdit } from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
@@ -92,8 +91,7 @@ Once I verify these details, I’ll send you a return QR code. Just post the ite
   };
 
   return (
-    <div className="w-full sm:w-1/2 lg:w-1/4 min-w-[300px] h-full flex flex-col border-l bg-gradient-to-t from-[#fdf4f5] via-[#f8f9fb] to-white text-sm relative">
-      <div className="flex items-center justify-between border-b px-4 pt-4">
+<div className="w-full sm:w-1/2 lg:w-1/4 min-w-[300px] h-[30vh] sm:h-full flex flex-col border-l bg-gradient-to-t from-[#fdf4f5] via-[#f8f9fb] to-white text-sm relative">      <div className="flex items-center justify-between border-b px-4 pt-4">
         <div className="flex gap-4">
           <button className="text-sm font-medium border-b-2 border-blue-600 text-blue-600 pb-1">
             <span className="flex items-center gap-1">
