@@ -1,7 +1,12 @@
 // src/components/AICopilot.jsx
 import { useEffect, useState } from "react";
-import { FiSend, FiBookOpen, FiMessageSquare } from "react-icons/fi";
+import { FiSend, FiBookOpen, FiMessageSquare, FiEdit } from "react-icons/fi";
 import { AnimatePresence, motion } from "framer-motion";
+import TooltipDialog from "./TooltipDialog";
+import { useRef } from "react";
+import { HiOutlineBookOpen } from "react-icons/hi";
+import { MdOutlineSpaceDashboard, MdViewSidebar } from "react-icons/md";
+import { LayoutPanelLeft } from "lucide-react";
 
 const IntercomIcon = ({ color = "#000000", size = 24 }) => (
   <svg
@@ -9,25 +14,33 @@ const IntercomIcon = ({ color = "#000000", size = 24 }) => (
     width={size}
     height={size}
     className="rounded-md"
-    style={{ backgroundColor: color, borderRadius: "8px", padding: "4px" }}
+    style={{ backgroundColor: color, borderRadius: "6px" }}
   >
     <rect width="32" height="32" rx="6" fill={color} />
-    <path
-      fill="white"
-      d="M10 10h2v8h-2zM14 10h2v8h-2zM18 10h2v8h-2zM22 10h2v8h-2z"
-    />
-    <path fill="white" d="M8 20c4 4 12 4 16 0l1 1c-5 5-13 5-18 0z" />
+    <g transform="scale(1.2) translate(-2.7, -2.7)">
+      <path
+        fill="white"
+        d="M10 10h2v8h-2zM14 10h2v8h-2zM18 10h2v8h-2zM22 10h2v8h-2z"
+      />
+      <path fill="white" d="M8 20c4 4 12 4 16 0l1 1c-5 5-13 5-18 0z" />
+    </g>
   </svg>
 );
 
-export default function AICopilot() {
+export default function AICopilot({ setInput }) {
   const [started, setStarted] = useState(false);
   const [step, setStep] = useState(0);
   const [finalVisible, setFinalVisible] = useState(false);
   const [finalText, setFinalText] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
 
-  const [sourceStatus, setSourceStatus] = useState(""); // new
-  const [visibleBullets, setVisibleBullets] = useState(0); // for staggered bullet points
+  const [sourceStatus, setSourceStatus] = useState("");
+  const [visibleBullets, setVisibleBullets] = useState(0);
+  const iconRef = useRef(null);
+  const [hovering, setHovering] = useState(false);
+
+  const tooltipRef = useRef(null);
+  const [tooltipPos, setTooltipPos] = useState({ top: 0, left: 0 });
 
   const fullAnswer = `To help you with your refund request, I’ll need your order ID and proof of purchase. Refunds are only available for items bought within the last 60 days and must meet our return condition policy.
 
@@ -35,7 +48,7 @@ Once I verify these details, I’ll send you a return QR code. Just post the ite
 
   useEffect(() => {
     if (started) {
-      setStep(0); // Ensure step 0 is triggered when started becomes true
+      setStep(0);
     }
   }, [started]);
 
@@ -46,26 +59,24 @@ Once I verify these details, I’ll send you a return QR code. Just post the ite
 
     if (step === 0) {
       setSourceStatus("Searching for relevant sources...");
-      timers.push(setTimeout(() => setStep(1), 500)); // after 0.5s
+      timers.push(setTimeout(() => setStep(1), 500));
     }
 
     if (step === 1) {
       setSourceStatus("Researching sources I found...");
-      timers.push(setTimeout(() => setStep(2), 1000)); // after 1s
+      timers.push(setTimeout(() => setStep(2), 1000));
     }
 
     if (step === 2) {
-      // Wait a bit before going to step 3, hide the sourceStatus first
       timers.push(
         setTimeout(() => {
           setSourceStatus("");
           setStep(3);
         }, 300)
-      ); // short delay to hide the status smoothly
+      );
     }
 
     if (step === 3) {
-      // Show bullets one-by-one
       [1, 2, 3].forEach((i) => {
         timers.push(setTimeout(() => setVisibleBullets(i), i * 500));
       });
@@ -90,11 +101,11 @@ Once I verify these details, I’ll send you a return QR code. Just post the ite
       setFinalText(fullAnswer.slice(0, index + 1));
       index++;
       if (index >= fullAnswer.length) clearInterval(interval);
-    }, 25);
+    }, 10);
   };
 
   return (
-    <div className="w-1/4 min-w-[400px] h-full flex flex-col border-l bg-gradient-to-t from-[#fdf4f5] via-[#f8f9fb] to-white text-sm font-sans relative">
+    <div className="w-1/4 min-w-[400px] h-full flex flex-col border-l bg-gradient-to-t from-[#fdf4f5] via-[#f8f9fb] to-white text-sm relative">
       {/* Tabs */}
       <div className="flex items-center justify-between border-b px-4 pt-4">
         <div className="flex gap-4">
@@ -106,7 +117,8 @@ Once I verify these details, I’ll send you a return QR code. Just post the ite
           </button>
           <button className="text-gray-500 pb-1">Details</button>
         </div>
-        <button className="text-gray-500 text-lg font-bold">⧉</button>
+        <button className="text-black text-lg font-bold"><MdOutlineSpaceDashboard className="w-5 h-5" />
+</button>
       </div>
 
       {/* Chatbox */}
@@ -178,25 +190,109 @@ Once I verify these details, I’ll send you a return QR code. Just post the ite
 
                     {step >= 4 && (
                       <motion.div
-                        initial={{ opacity: 0.5 }}
+                        initial={{ opacity: 0.5, height: 120 }}
                         animate={{
                           opacity: finalVisible ? 1 : [0.5, 1, 0.5, 1],
+                          height: finalVisible ? "auto" : 120,
                         }}
                         transition={{
                           duration: finalVisible ? 0.3 : 1.5,
                           repeat: finalVisible ? 0 : 1,
                         }}
-                        className="rounded-xl px-4 py-2 mt-2 text-sm bg-gradient-to-r from-purple-100 to-purple-200"
+                        className="rounded-xl px-4 py-2 mt-2 text-sm bg-gradient-to-r from-purple-100 to-purple-200 overflow-hidden w-full"
+                        style={{
+                          minWidth: "100%",
+                          boxSizing: "border-box",
+                        }}
                       >
-                        {finalVisible && (
-                          <p className="text-sm font-regular text-gray-800">
-                            {finalText}
+                        {finalVisible ? (
+                          <div className="text-sm relative font-semibold text-gray-800 w-full">
+                            <span>{finalText}</span>
+
                             {finalText === fullAnswer && (
-                              <span className="ml-1 w-4 h-4 inline-flex items-center justify-center text-white text-xs bg-blue-900 rounded-full">
-                                1
-                              </span>
+                              <>
+                                <div
+                                  ref={tooltipRef}
+                                  className="relative inline-block ml-1 w-4 h-4"
+                                  onMouseEnter={() => {
+                                    const rect =
+                                      tooltipRef.current?.getBoundingClientRect();
+                                    if (rect) {
+                                      setTooltipPos({
+                                        top: rect.top + rect.height / 2,
+                                        left: rect.left,
+                                      });
+                                    }
+                                    setShowTooltip(true);
+                                  }}
+                                  onMouseLeave={() => setShowTooltip(false)}
+                                >
+                                  <span className="w-4 h-4 inline-flex items-center justify-center text-white text-xs bg-blue-900 rounded-full">
+                                    1
+                                  </span>
+                                  {showTooltip && (
+                                    <div
+                                      className="fixed z-[9999] w-72 rounded-xl shadow-xl border border-gray-200 bg-white p-4 text-sm text-gray-800 space-y-3"
+                                      style={{
+                                        top: `${tooltipPos.top}px`,
+                                         left: `${tooltipPos.left -280}px`, // 320px = 280px width + some margin
+                                        transform: "translateY(-50%)",
+                                      }}
+                                    >
+                                      <div className="text-base font-semibold">
+                                        Getting a refund
+                                      </div>
+
+                                      <div className="text-xs text-gray-500 flex items-center gap-1">
+                                          <HiOutlineBookOpen className="w-4 h-4" />
+
+                                        <span>Public article</span> •{" "}
+                                        <span>Amy Adams</span> •{" "}
+                                        <span>1d ago</span>
+                                      </div>
+
+                                      <div className="text-sm border-l-2 border-gray-200 pl-3 text-gray-700 leading-snug">
+                                        We understand that sometimes a purchase
+                                        may not meet your expectations, and you
+                                        may need to request a refund. This guide
+                                        outlines the simple steps to help you
+                                        navigate the refund process and ensure a
+                                        smooth resolution to your concern.
+                                      </div>
+
+                                      <button
+                                        onClick={() => setInput?.(finalText)}
+                                        className="w-full mt-1 flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white py-1.5 text-sm font-medium hover:bg-gray-50"
+                                      >
+                                        <FiEdit className="w-4 h-4" />
+                                        Add to composer
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+
+                                <button
+                                  onClick={() => {
+                                    setInput?.(finalText);
+                                  }}
+                                  className="w-full bg-white mt-2 py-1 px-2 rounded-md border text-sm font-medium flex items-center justify-center gap-1 hover:bg-gray-100"
+                                >
+                                  <FiEdit className="w-4 h-4" />
+                                  Add to composer
+                                </button>
+                              </>
                             )}
-                          </p>
+                          </div>
+                        ) : (
+                          <div className="h-full w-[42vh] flex items-center justify-center">
+                            <motion.div
+                              animate={{ opacity: [0.3, 0.6, 0.3] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                              className="text-gray-800 text-sm w-full text-center"
+                            >
+                              Generating response...
+                            </motion.div>
+                          </div>
                         )}
                       </motion.div>
                     )}
